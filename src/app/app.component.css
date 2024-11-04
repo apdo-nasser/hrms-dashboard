@@ -1,0 +1,8 @@
+/* C:\Users\abdo.nasser\hrms-dashboard\src\app\app.component.css */
+
+.content-container {
+    margin-left: 200px; /* Same width as sidebar */
+    padding: 1rem;
+    flex: 1;
+  }
+  

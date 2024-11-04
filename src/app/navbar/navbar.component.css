@@ -1,0 +1,13 @@
+.navbar {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-text {
+  display: flex;
+  align-items: center;
+}
+
+.rounded-circle {
+  border-radius: 50%; /* Ensures the user icon is circular */
+}

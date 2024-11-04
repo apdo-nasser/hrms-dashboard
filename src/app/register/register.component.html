@@ -1,0 +1,60 @@
+<div class="container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="step === 1">
+      <div class="step">Step 1: Basic Information</div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="company">Company Name</label>
+        <input type="text" id="company" formControlName="company" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="role">User Role</label>
+        <select id="role" formControlName="role" class="form-control" required>
+          <option value="" disabled selected>Select a role</option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="employee">Employee</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+    </div>
+    
+    <div *ngIf="step === 2">
+      <div class="step">Step 2: Company Details</div>
+      <div class="form-group">
+        <label>Number of Employees</label>
+        <div>
+          <label><input type="radio" formControlName="numEmployees" value="1-10"> 1-10</label>
+          <label><input type="radio" formControlName="numEmployees" value="11-50"> 11-50</label>
+          <label><input type="radio" formControlName="numEmployees" value="51-200"> 51-200</label>
+          <label><input type="radio" formControlName="numEmployees" value="200+"> 200+</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="industry">Industry</label>
+        <input type="text" id="industry" formControlName="industry" class="form-control" required>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+    </div>
+    
+    <div *ngIf="step === 3">
+      <div class="step">Step 3: Account Security</div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-success">Register</button>
+    </div>
+  </form>
+</div>
