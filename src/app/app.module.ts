@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app.routes';
-
-// Import standalone components
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
@@ -22,7 +20,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    // Import standalone components
     HomeComponent,
     RegisterComponent,
     ResetPasswordComponent,
@@ -32,7 +29,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     EmployeeDashboardComponent,
     NavbarComponent,
     SidebarComponent
-    // No need to import LoginComponent here since it's standalone
+    
   ],
   providers: []
 })

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';  // Import RouterModule here
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -10,15 +11,17 @@ import { isPlatformBrowser } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]  // Add RouterModule to imports
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  showPassword: boolean = false;
+  coverEyes: boolean = false; // Controls the hand visibility
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object  // Inject PLATFORM_ID to check platform
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -26,20 +29,31 @@ export class LoginComponent {
     });
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onPasswordFocus(isFocused: boolean) {
+    this.coverEyes = isFocused; // Show hand when focused
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
       const userData = this.loginForm.value;
 
-      // Check if we can access localStorage
       if (isPlatformBrowser(this.platformId)) {
-        const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-
-        // Validate user credentials
-        if (storedUser.email === userData.email && storedUser.password === userData.password) {
-          // Save user role in localStorage to use it in Navbar
-          const userRole = storedUser.role || 'guest';  // Default to 'guest' if not found
-          localStorage.setItem('user', JSON.stringify({ ...storedUser, role: userRole }));
-          this.router.navigate([`/${userRole}-dashboard`]);  // Redirect based on user role
+        const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        
+        // Find the user that matches the email and password
+        const user = storedUsers.find((u: any) => u.email === userData.email && u.password === userData.password);
+        
+        if (user) {
+          // Set the current session user in localStorage
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          // Navigate to the user's dashboard based on their role
+          const userRole = user.role || 'guest'; // Default to 'guest' if no role is set
+          this.router.navigate([`/${userRole}-dashboard`]);
         } else {
           alert('Invalid credentials');
         }

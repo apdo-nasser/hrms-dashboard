@@ -10,9 +10,9 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class NavbarComponent implements OnInit {
   userName: string = 'Guest';
-  userIcon: string = 'assets/default-icon.png'; // Default guest icon
-  logoUrl: string = 'assets/default-logo.png'; // Default logo for guests
-  userRole: string = 'guest'; // Default role
+  userIcon: string = 'assets/default.png';
+  logoUrl: string = 'assets/default.png';
+  userRole: string = 'guest';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -71,10 +71,10 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     if (isPlatformBrowser(this.platformId)) {
-      // Clear user data from localStorage
+      // Clear only the current user data
       localStorage.removeItem('user');
 
-      // Reset component properties to guest values
+      // Reset to guest values
       this.userName = 'Guest';
       this.userRole = 'guest';
       this.userIcon = 'assets/default-icon.png';

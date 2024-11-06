@@ -10,7 +10,7 @@ import { isPlatformBrowser } from '@angular/common';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]  // Ensure CommonModule and ReactiveFormsModule are imported here
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class RegisterComponent {
   registerForm: FormGroup;
@@ -19,37 +19,47 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object  // Inject PLATFORM_ID to check platform
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      company: ['', Validators.required],           // Added company field
-      role: ['', Validators.required],               // Ensure role is part of the registration form
-      numEmployees: ['', Validators.required],       // Added number of employees field
-      industry: ['', Validators.required],           // Added industry field
+      company: ['', Validators.required],
+      role: ['', Validators.required],
+      numEmployees: ['', Validators.required],
+      industry: ['', Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     });
   }
 
-  // This method advances to the next step in the form
   nextStep() {
     this.step++;
   }
 
-  // This method submits the form and navigates to home on success
   onSubmit() {
     if (this.registerForm.valid) {
-      const userData = this.registerForm.value;
+      const userData = {
+        ...this.registerForm.value,
+        registeredAt: new Date().toISOString() // Add registration date
+      };
 
-      // Only access localStorage if we are in a browser environment
       if (isPlatformBrowser(this.platformId)) {
+        // Retrieve existing registered users from localStorage or initialize as empty array
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+        // Add the new user data to the registered users array
+        users.push(userData);
+
+        // Save the updated users array to localStorage
+        localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+        // Set the current session user data
         localStorage.setItem('user', JSON.stringify(userData));
       }
 
-      this.router.navigate(['/home']);  // Redirect to the home page after registration
-      alert('Registration successful!'); // Feedback on successful registration
+      this.router.navigate(['/login']);  // Redirect to login page after registration
+      alert('Registration successful!');
     } else {
       alert('Please fill in all required fields.');
     }

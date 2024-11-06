@@ -1,7 +1,18 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
+    <div class="col-md-12">
+      <div class="card animate-card">
+        <div class="avatar-container">
+          <div class="avatar" [class.cover-eyes]="coverEyes">
+            <!-- Human figure structure -->
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm left-arm"></div>
+            <div class="arm right-arm"></div>
+            <!-- Hand covering the eyes -->
+            <div class="hand" [class.covered]="coverEyes"></div>
+          </div>
+        </div>
         <div class="card-header text-center">
           <h3>Login</h3>
         </div>
@@ -9,26 +20,51 @@
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
               <label for="email">Email</label>
-              <input id="email" formControlName="email" type="email" class="form-control" placeholder="Enter your email" required />
-              <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
+              <input
+                id="email"
+                formControlName="email"
+                type="email"
+                class="form-control"
+                placeholder="Enter your email"
+                required
+              />
+              <div
+                *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                class="text-danger"
+              >
                 <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
                 <small *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format.</small>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group position-relative">
               <label for="password">Password</label>
-              <input id="password" formControlName="password" type="password" class="form-control" placeholder="Enter your password" required />
-              <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+              <input
+                id="password"
+                formControlName="password"
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control"
+                placeholder="Enter your password"
+                required
+                (focus)="onPasswordFocus(true)"
+                (blur)="onPasswordFocus(false)"
+              />
+              <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">
+                {{ showPassword ? 'Hide' : 'Show' }}
+              </button>
+              <div
+                *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                class="text-danger"
+              >
                 <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
               </div>
             </div>
-            <div class="form-group text-center">
+            <div class="form-group text-center mt-4">
               <button type="submit" class="btn btn-primary btn-block">Login</button>
             </div>
           </form>
-          <div class="text-center">
-            <p class="mt-3">Don't have an account? <a href="/register">Register</a></p>
-            <p><a href="/forgot-password">Forgot Password?</a></p>
+          <div class="text-center mt-3">
+            <p>Don't have an account? <a [routerLink]="'/register'">Register</a></p>
+            <p><a [routerLink]="'/forgot-password'">Forgot Password?</a></p>
           </div>
         </div>
       </div>
