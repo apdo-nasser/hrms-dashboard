@@ -8,17 +8,30 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ManagerDashboardComponent } from './manager-dashboard/manager-dashboard.component';
 import { EmployeeDashboardComponent } from './employee-dashboard/employee-dashboard.component';
+import { NotFoundComponentComponent } from './not-found-component/not-found-component.component';
+
+
+
+// Guards
+import { AuthGuard } from './auth.guard';
+import { RoleGuard } from './role.guard';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'home', component: HomeComponent },  
-  { path: 'register', component: RegisterComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'admin-dashboard', component: AdminDashboardComponent },
-  { path: 'manager-dashboard', component: ManagerDashboardComponent },
-  { path: 'employee-dashboard', component: EmployeeDashboardComponent }
+
+  // Protected routes
+  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['admin'] } },
+  { path: 'manager-dashboard', component: ManagerDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['admin', 'manager'] } },
+  { path: 'employee-dashboard', component: EmployeeDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['admin', 'manager', 'employee'] } },
+
+  // 404 error route
+  { path: '404', component: NotFoundComponentComponent },
+  { path: '**', redirectTo: '404' } // Redirect any unknown route to the 404 page
 ];
 
 @NgModule({

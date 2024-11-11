@@ -1,9 +1,9 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';  // Import RouterModule here
+import { RouterModule } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -11,12 +11,13 @@ import { isPlatformBrowser } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule]  // Add RouterModule to imports
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
 export class LoginComponent {
   loginForm: FormGroup;
   showPassword: boolean = false;
   coverEyes: boolean = false; // Controls the hand visibility
+  @Output() loginStatus = new EventEmitter<boolean>();
 
   constructor(
     private fb: FormBuilder,
@@ -25,7 +26,7 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -34,7 +35,7 @@ export class LoginComponent {
   }
 
   onPasswordFocus(isFocused: boolean) {
-    this.coverEyes = isFocused; // Show hand when focused
+    this.coverEyes = isFocused;
   }
 
   onSubmit() {
@@ -43,17 +44,17 @@ export class LoginComponent {
 
       if (isPlatformBrowser(this.platformId)) {
         const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        
-        // Find the user that matches the email and password
-        const user = storedUsers.find((u: any) => u.email === userData.email && u.password === userData.password);
-        
+
+        const user = storedUsers.find(
+          (u: any) => u.email === userData.email && u.password === userData.password
+        );
+
         if (user) {
-          // Set the current session user in localStorage
           localStorage.setItem('user', JSON.stringify(user));
-          
-          // Navigate to the user's dashboard based on their role
-          const userRole = user.role || 'guest'; // Default to 'guest' if no role is set
+
+          const userRole = user.role || 'guest';
           this.router.navigate([`/${userRole}-dashboard`]);
+          this.loginStatus.emit(true); // Notify AppComponent of successful login
         } else {
           alert('Invalid credentials');
         }

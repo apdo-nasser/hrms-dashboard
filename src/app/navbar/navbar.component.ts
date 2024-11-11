@@ -1,18 +1,21 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
-  standalone: true
+  standalone: true,
+  imports: [CommonModule]  // Import CommonModule for *ngIf
 })
 export class NavbarComponent implements OnInit {
   userName: string = 'Guest';
   userIcon: string = 'assets/default.png';
   logoUrl: string = 'assets/default.png';
   userRole: string = 'guest';
+  isLoggedIn: boolean = false;  // Track login state
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -28,10 +31,15 @@ export class NavbarComponent implements OnInit {
       const userDataStr = localStorage.getItem('user') || '{}';
       const userData = JSON.parse(userDataStr);
 
-      this.userName = userData.name || 'Guest';
-      this.userRole = userData.role || 'guest';
-      this.setUserIconByRole(this.userRole);
-      this.setLogoByRole(this.userRole);
+      if (userData && userData.name) {
+        this.isLoggedIn = true;  // User is logged in
+        this.userName = userData.name;
+        this.userRole = userData.role;
+        this.setUserIconByRole(this.userRole);
+        this.setLogoByRole(this.userRole);
+      } else {
+        this.isLoggedIn = false;  // User is not logged in
+      }
     }
   }
 
@@ -80,8 +88,11 @@ export class NavbarComponent implements OnInit {
       this.userIcon = 'assets/default-icon.png';
       this.logoUrl = 'assets/default-logo.png';
 
-      // Redirect to the home page
-      this.router.navigate(['/']);
+      // Set login state to false
+      this.isLoggedIn = false;
+
+      // Redirect to the home page or login page
+      this.router.navigate(['/login']);
     }
   }
 }

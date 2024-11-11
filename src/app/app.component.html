@@ -1,9 +1,16 @@
 <!-- C:\Users\abdo.nasser\hrms-dashboard\src\app\app.component.html -->
 
-<app-navbar></app-navbar>
-<div class="d-flex">
-  <app-sidebar></app-sidebar>
-  <div class="content-container">
-    <router-outlet></router-outlet>
+<div *ngIf="isLoggedIn">
+  <app-navbar></app-navbar>
+  <div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
   </div>
+</div>
+
+<!-- Show only the login page when not logged in -->
+<div *ngIf="!isLoggedIn">
+  <router-outlet></router-outlet>
 </div>
