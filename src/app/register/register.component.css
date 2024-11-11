@@ -8,16 +8,35 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
+/* Fullscreen Background Image */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('/assets/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1; /* Ensure it stays behind the form */
+}
+
+/* Container Styling */
 .container {
   margin-top: 50px;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px); /* Strong frosted glass effect */
+  background-color: rgba(255, 255, 255, 0.2); /* Slightly more transparent white */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37); /* Depth shadow */
+  border: 1px solid rgba(255, 255, 255, 0.18); /* Glass-like border */
   animation: fadeIn 1s ease-out;
 }
 
 /* Card Styling */
 .card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.1); /* Transparent card */
   border: none;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -31,20 +50,23 @@ body {
 }
 
 .card-header {
-  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+  background: rgba(255, 255, 255, 0.3); /* Semi-transparent header */
   color: white;
   text-align: center;
-  padding: 1rem;
-  font-size: 1.5rem;
+  padding: 1.5rem 1rem;
+  font-size: 1.7rem;
   font-weight: bold;
+  border-radius: 12px 12px 0 0;
 }
 
 /* Input Fields */
 .form-control {
   border-radius: 10px;
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 12px 16px;
+  margin-bottom: 1rem;
   transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent background for inputs */
 }
 
 .form-control:focus {
@@ -59,8 +81,9 @@ body {
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 12px 20px;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 100%;
 }
 
 .btn:hover {
@@ -104,43 +127,4 @@ a:hover {
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 20px;
-}
-
-/* Avatar Styling (Optional) */
-.avatar-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  position: relative;
-}
-
-/* Avatar and Hand Styling (Optional) */
-.avatar {
-  position: relative;
-  width: 120px;
-  height: 250px;
-  background: #f3f3f3;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-/* Button */
-.show-password-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #2575fc;
-  cursor: pointer;
-}
-
-.show-password-btn:hover {
-  color: #1a5cbf;
 }

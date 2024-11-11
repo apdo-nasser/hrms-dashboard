@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { trigger, state, style, transition, animate } from '@angular/animations';  // Import Angular animations
 
 @Component({
   selector: 'app-login',
@@ -12,12 +13,31 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./login.component.css'],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })),
+      transition('void <=> *', [animate('1s ease-in-out')])
+    ]),
+    trigger('moveAvatar', [
+      state('default', style({ transform: 'translateY(0)' })),
+      state('moved', style({ transform: 'translateY(-20px)' })),
+      transition('default <=> moved', [animate('0.5s ease-out')]),
+    ]),
+    trigger('moveInputs', [
+      state('default', style({ transform: 'translateX(0)' })),
+      state('moved', style({ transform: 'translateX(10px)' })),
+      transition('default <=> moved', [animate('0.3s ease-in-out')]),
+    ]),
+  ]
 })
 export class LoginComponent {
   loginForm: FormGroup;
   showPassword: boolean = false;
   coverEyes: boolean = false; // Controls the hand visibility
-  @Output() loginStatus = new EventEmitter<boolean>();
+  @Output() loginStatus = new EventEmitter<boolean>(); // Emit login status
+
+  avatarState: string = 'default'; // Controls avatar movement
+  inputState: string = 'default'; // Controls input movement
 
   constructor(
     private fb: FormBuilder,
@@ -50,15 +70,32 @@ export class LoginComponent {
         );
 
         if (user) {
+          // Store logged-in user data in localStorage
           localStorage.setItem('user', JSON.stringify(user));
 
+          // Determine user's role and navigate accordingly
           const userRole = user.role || 'guest';
           this.router.navigate([`/${userRole}-dashboard`]);
-          this.loginStatus.emit(true); // Notify AppComponent of successful login
+
+          // Emit successful login status to other components
+          this.loginStatus.emit(true);
         } else {
           alert('Invalid credentials');
         }
       }
     }
+  }
+
+  // Trigger the avatar and input animations when the form is interacted with
+  onAvatarClick() {
+    this.avatarState = this.avatarState === 'default' ? 'moved' : 'default';
+  }
+
+  onInputFocus() {
+    this.inputState = 'moved';
+  }
+
+  onInputBlur() {
+    this.inputState = 'default';
   }
 }

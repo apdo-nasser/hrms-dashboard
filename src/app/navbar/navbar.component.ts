@@ -1,21 +1,20 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
   standalone: true,
-  imports: [CommonModule]  // Import CommonModule for *ngIf
+  imports: [CommonModule]  // Ensure CommonModule is included here
 })
 export class NavbarComponent implements OnInit {
   userName: string = 'Guest';
   userIcon: string = 'assets/default.png';
   logoUrl: string = 'assets/default.png';
   userRole: string = 'guest';
-  isLoggedIn: boolean = false;  // Track login state
+  isLoggedIn: boolean = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -31,14 +30,14 @@ export class NavbarComponent implements OnInit {
       const userDataStr = localStorage.getItem('user') || '{}';
       const userData = JSON.parse(userDataStr);
 
-      if (userData && userData.name) {
-        this.isLoggedIn = true;  // User is logged in
+      if (userData && userData.name && userData.role) {
+        this.isLoggedIn = true;
         this.userName = userData.name;
         this.userRole = userData.role;
         this.setUserIconByRole(this.userRole);
         this.setLogoByRole(this.userRole);
       } else {
-        this.isLoggedIn = false;  // User is not logged in
+        this.isLoggedIn = false;
       }
     }
   }
@@ -77,21 +76,35 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  onLogoClick() {
+    if (this.isLoggedIn) {
+      switch (this.userRole) {
+        case 'admin':
+          this.router.navigate(['/admin-dashboard']);
+          break;
+        case 'manager':
+          this.router.navigate(['/manager-dashboard']);
+          break;
+        case 'employee':
+          this.router.navigate(['/employee-dashboard']);
+          break;
+        default:
+          this.router.navigate(['/']);
+          break;
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
   logout() {
     if (isPlatformBrowser(this.platformId)) {
-      // Clear only the current user data
       localStorage.removeItem('user');
-
-      // Reset to guest values
       this.userName = 'Guest';
       this.userRole = 'guest';
       this.userIcon = 'assets/default-icon.png';
       this.logoUrl = 'assets/default-logo.png';
-
-      // Set login state to false
       this.isLoggedIn = false;
-
-      // Redirect to the home page or login page
       this.router.navigate(['/login']);
     }
   }
