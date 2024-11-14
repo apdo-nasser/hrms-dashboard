@@ -1,11 +1,12 @@
-import { Component, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { trigger, state, style, transition, animate } from '@angular/animations';  // Import Angular animations
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   animations: [
     trigger('fadeIn', [
       state('void', style({ opacity: 0 })),
-      transition('void <=> *', [animate('1s ease-in-out')])
+      transition('void <=> *', [animate('1s ease-in-out')]),
     ]),
     trigger('moveAvatar', [
       state('default', style({ transform: 'translateY(0)' })),
@@ -28,20 +29,19 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       state('moved', style({ transform: 'translateX(10px)' })),
       transition('default <=> moved', [animate('0.3s ease-in-out')]),
     ]),
-  ]
+  ],
 })
 export class LoginComponent {
   loginForm: FormGroup;
   showPassword: boolean = false;
-  coverEyes: boolean = false; // Controls the hand visibility
-  @Output() loginStatus = new EventEmitter<boolean>(); // Emit login status
-
-  avatarState: string = 'default'; // Controls avatar movement
-  inputState: string = 'default'; // Controls input movement
+  coverEyes: boolean = false;
+  avatarState: string = 'default';
+  inputState: string = 'default';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loginForm = this.fb.group({
@@ -59,34 +59,27 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
+    if (this.loginForm.valid && isPlatformBrowser(this.platformId)) {
       const userData = this.loginForm.value;
+      const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
 
-      if (isPlatformBrowser(this.platformId)) {
-        const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      const user = storedUsers.find(
+        (u: any) => u.email === userData.email && u.password === userData.password
+      );
 
-        const user = storedUsers.find(
-          (u: any) => u.email === userData.email && u.password === userData.password
-        );
+      if (user) {
+        // Log in using AuthService
+        this.authService.login(user);
 
-        if (user) {
-          // Store logged-in user data in localStorage
-          localStorage.setItem('user', JSON.stringify(user));
-
-          // Determine user's role and navigate accordingly
-          const userRole = user.role || 'guest';
-          this.router.navigate([`/${userRole}-dashboard`]);
-
-          // Emit successful login status to other components
-          this.loginStatus.emit(true);
-        } else {
-          alert('Invalid credentials');
-        }
+        // Determine user's role and navigate accordingly
+        const userRole = user.role || 'guest';
+        this.router.navigate([`/${userRole}-dashboard`]);
+      } else {
+        alert('Invalid credentials');
       }
     }
   }
 
-  // Trigger the avatar and input animations when the form is interacted with
   onAvatarClick() {
     this.avatarState = this.avatarState === 'default' ? 'moved' : 'default';
   }

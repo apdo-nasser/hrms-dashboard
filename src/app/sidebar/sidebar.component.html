@@ -1,17 +1,63 @@
-<!-- C:\Users\abdo.nasser\hrms-dashboard\src\app\sidebar\sidebar.component.html -->
-
 <div class="sidebar">
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/dashboard">
-          <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/settings">
-          <i class="bi bi-gear"></i> Settings
-        </a>
-      </li>
-    </ul>
-  </div>
+  <ul class="nav flex-column">
+    <!-- Dashboard Link (Visible to all logged-in users) -->
   
+
+    <!-- Admin-Specific Links -->
+    <li class="nav-item" *ngIf="isAdmin">
+      <a class="nav-link" routerLink="/admin-dashboard">
+        <i class="bi bi-person-badge"></i> Admin Dashboard
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="isAdmin">
+      <a class="nav-link" routerLink="/user-management">
+        <i class="bi bi-people"></i> User Management
+      </a>
+    </li>
+
+    <!-- Manager-Specific Links -->
+    <li class="nav-item" *ngIf="isManager">
+      <a class="nav-link" routerLink="/manager-dashboard">
+        <i class="bi bi-briefcase"></i> Manager Dashboard
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="isManager">
+      <a class="nav-link" routerLink="/team-overview">
+        <i class="bi bi-diagram-3"></i> Team Overview
+      </a>
+    </li>
+
+    <!-- Employee-Specific Links -->
+    <li class="nav-item" *ngIf="isEmployee">
+      <a class="nav-link" routerLink="/employee-dashboard">
+        <i class="bi bi-person"></i> Employee Dashboard
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="isEmployee">
+      <a class="nav-link" routerLink="/tasks">
+        <i class="bi bi-list-task"></i> My Tasks
+      </a>
+    </li>
+
+    <!-- Common Links (Visible to all logged-in users) -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/settings">
+        <i class="bi bi-gear"></i> Settings
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </a>
+    </li>
+  </ul>
+
+  <!-- Login Link (Visible to guests only) -->
+  <ul class="nav flex-column" *ngIf="!isLoggedIn">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/login">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+    </li>
+  </ul>
+</div>

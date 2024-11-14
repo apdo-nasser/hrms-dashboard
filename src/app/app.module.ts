@@ -12,6 +12,7 @@ import { ManagerDashboardComponent } from './manager-dashboard/manager-dashboard
 import { EmployeeDashboardComponent } from './employee-dashboard/employee-dashboard.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { AuthService } from './auth.service';
 
 @NgModule({
   imports: [
@@ -28,9 +29,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     ManagerDashboardComponent,
     EmployeeDashboardComponent,
     NavbarComponent,
-    SidebarComponent
-    
+    SidebarComponent,
   ],
-  providers: []
+  providers: [AuthService],
 })
-export class AppModule { }
+export class AppModule {}

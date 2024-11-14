@@ -10,11 +10,11 @@ import { ManagerDashboardComponent } from './manager-dashboard/manager-dashboard
 import { EmployeeDashboardComponent } from './employee-dashboard/employee-dashboard.component';
 import { NotFoundComponentComponent } from './not-found-component/not-found-component.component';
 
-
-
 // Guards
 import { AuthGuard } from './auth.guard';
-import { RoleGuard } from './role.guard';
+import { AdminGuard } from './admin.guard';
+import { ManagerGuard } from './manager.guard';
+import { EmployeeGuard } from './employee.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,18 +24,30 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
 
-  // Protected routes
-  { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['admin'] } },
-  { path: 'manager-dashboard', component: ManagerDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['admin', 'manager'] } },
-  { path: 'employee-dashboard', component: EmployeeDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['admin', 'manager', 'employee'] } },
+  // Protected routes for different roles
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard, AdminGuard],
+  },
+  {
+    path: 'manager-dashboard',
+    component: ManagerDashboardComponent,
+    canActivate: [AuthGuard, ManagerGuard],
+  },
+  {
+    path: 'employee-dashboard',
+    component: EmployeeDashboardComponent,
+    canActivate: [AuthGuard, EmployeeGuard],
+  },
 
   // 404 error route
   { path: '404', component: NotFoundComponentComponent },
-  { path: '**', redirectTo: '404' } // Redirect any unknown route to the 404 page
+  { path: '**', redirectTo: '404' }, // Redirect any unknown route to the 404 page
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}
