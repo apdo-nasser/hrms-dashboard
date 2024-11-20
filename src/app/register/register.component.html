@@ -1,5 +1,11 @@
 <div class="background-container"></div> <!-- Background Image -->
 
+<!-- Success Modal -->
+<app-success-modal
+  #successModal
+  [message]="'Registration successful! Redirecting to login...'"
+></app-success-modal>
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12">
@@ -9,61 +15,153 @@
         </div>
         <div class="card-body">
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <!-- Step 1: Basic Information -->
             <div *ngIf="step === 1">
               <div class="step">Step 1: Basic Information</div>
               <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" formControlName="name" class="form-control" required />
+                <input
+                  type="text"
+                  id="name"
+                  formControlName="name"
+                  class="form-control"
+                  placeholder="Enter your name"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" formControlName="email" class="form-control" required />
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="company">Company Name</label>
-                <input type="text" id="company" formControlName="company" class="form-control" required />
+                <input
+                  type="text"
+                  id="company"
+                  formControlName="company"
+                  class="form-control"
+                  placeholder="Enter your company name"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="role">User Role</label>
-                <select id="role" formControlName="role" class="form-control" required>
+                <select
+                  id="role"
+                  formControlName="role"
+                  class="form-control"
+                  required
+                >
                   <option value="" disabled selected>Select a role</option>
                   <option value="admin">Admin</option>
                   <option value="manager">Manager</option>
                   <option value="employee">Employee</option>
                 </select>
               </div>
-              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                (click)="nextStep()"
+              >
+                Next
+              </button>
             </div>
 
+            <!-- Step 2: Company Details -->
             <div *ngIf="step === 2">
               <div class="step">Step 2: Company Details</div>
               <div class="form-group">
                 <label>Number of Employees</label>
                 <div>
-                  <label><input type="radio" formControlName="numEmployees" value="1-10" /> 1-10</label>
-                  <label><input type="radio" formControlName="numEmployees" value="11-50" /> 11-50</label>
-                  <label><input type="radio" formControlName="numEmployees" value="51-200" /> 51-200</label>
-                  <label><input type="radio" formControlName="numEmployees" value="200+" /> 200+</label>
+                  <label
+                    ><input
+                      type="radio"
+                      formControlName="numEmployees"
+                      value="1-10"
+                    />
+                    1-10</label
+                  >
+                  <label
+                    ><input
+                      type="radio"
+                      formControlName="numEmployees"
+                      value="11-50"
+                    />
+                    11-50</label
+                  >
+                  <label
+                    ><input
+                      type="radio"
+                      formControlName="numEmployees"
+                      value="51-200"
+                    />
+                    51-200</label
+                  >
+                  <label
+                    ><input
+                      type="radio"
+                      formControlName="numEmployees"
+                      value="200+"
+                    />
+                    200+</label
+                  >
                 </div>
               </div>
               <div class="form-group">
                 <label for="industry">Industry</label>
-                <input type="text" id="industry" formControlName="industry" class="form-control" required />
+                <input
+                  type="text"
+                  id="industry"
+                  formControlName="industry"
+                  class="form-control"
+                  placeholder="Enter your industry"
+                  required
+                />
               </div>
-              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                (click)="nextStep()"
+              >
+                Next
+              </button>
             </div>
 
+            <!-- Step 3: Account Security -->
             <div *ngIf="step === 3">
               <div class="step">Step 3: Account Security</div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" formControlName="password" class="form-control" required />
+                <input
+                  type="password"
+                  id="password"
+                  formControlName="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" required />
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  class="form-control"
+                  placeholder="Confirm your password"
+                  required
+                />
               </div>
-              <button type="submit" class="btn btn-success">Register</button>
+              <button type="submit" class="btn btn-success btn-block">
+                Register
+              </button>
             </div>
           </form>
         </div>

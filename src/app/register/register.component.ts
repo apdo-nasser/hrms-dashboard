@@ -1,26 +1,24 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
+import { SuccessModalComponent } from '../success-modal/success-modal.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, SuccessModalComponent],
 })
 export class RegisterComponent {
   registerForm: FormGroup;
   step: number = 1;
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  @ViewChild(SuccessModalComponent) successModal!: SuccessModalComponent;
+
+  constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -29,7 +27,7 @@ export class RegisterComponent {
       numEmployees: ['', Validators.required],
       industry: ['', Validators.required],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
     });
   }
 
@@ -41,25 +39,23 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       const userData = {
         ...this.registerForm.value,
-        registeredAt: new Date().toISOString() // Add registration date
+        registeredAt: new Date().toISOString(),
       };
 
-      if (isPlatformBrowser(this.platformId)) {
-        // Retrieve existing registered users from localStorage or initialize as empty array
-        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      // Save data to localStorage
+      const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      users.push(userData);
+      localStorage.setItem('registeredUsers', JSON.stringify(users));
+      localStorage.setItem('user', JSON.stringify(userData));
 
-        // Add the new user data to the registered users array
-        users.push(userData);
+      // Show the success modal
+      this.successModal.open();
 
-        // Save the updated users array to localStorage
-        localStorage.setItem('registeredUsers', JSON.stringify(users));
-
-        // Set the current session user data
-        localStorage.setItem('user', JSON.stringify(userData));
-      }
-
-      this.router.navigate(['/login']);  // Redirect to login page after registration
-      alert('Registration successful!');
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        this.successModal.close();
+        this.router.navigate(['/login']);
+      }, 2000);
     } else {
       alert('Please fill in all required fields.');
     }

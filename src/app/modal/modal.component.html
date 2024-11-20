@@ -1,0 +1,7 @@
+<div *ngIf="visible" class="modal-backdrop" (click)="onBackdropClick($event)">
+    <div class="modal-content">
+      <p [ngClass]="type">{{ message }}</p>  <!-- Display the message with dynamic classes for type -->
+      <button (click)="closeModal()">Close</button>
+    </div>
+  </div>
+  

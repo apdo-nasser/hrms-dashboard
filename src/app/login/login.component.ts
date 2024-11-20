@@ -6,17 +6,24 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../auth.service';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ModalComponent],
 })
 export class LoginComponent {
   loginForm: FormGroup;
   showPassword: boolean = false;
+  showModal: boolean = false;  // To control modal visibility
+  modalMessage: string = '';  // The message to show in the modal
+  modalType: 'success' | 'error' | 'info' = 'info';  // The type of message
+  
+  // Add a message property to hold feedback data
+  message: { type: string; title: string; text: string } | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -34,29 +41,38 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  onPasswordFocus(isFocused: boolean) {
-    // Removed coverEyes logic
-  }
+  onPasswordFocus(isFocused: boolean) {}
 
   onSubmit() {
     if (this.loginForm.valid && isPlatformBrowser(this.platformId)) {
       const userData = this.loginForm.value;
       const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-
-      const user = storedUsers.find(
-        (u: any) => u.email === userData.email && u.password === userData.password
-      );
+      const user = storedUsers.find((u: any) => {
+        const emailMatches = u.email.trim().toLowerCase() === userData.email.trim().toLowerCase();
+        const passwordMatches = u.password === userData.password;
+        return emailMatches && passwordMatches;
+      });
 
       if (user) {
-        // Log in using AuthService
         this.authService.login(user);
-
-        // Determine user's role and navigate accordingly
         const userRole = user.role || 'guest';
         this.router.navigate([`/${userRole}-dashboard`]);
       } else {
-        alert('Invalid credentials');
+        this.modalMessage = 'Invalid credentials. Please check your email and password.';
+        this.modalType = 'error';
+        this.showModal = true;
+
+        // Set the message property for the feedback
+        this.message = {
+          type: 'danger',
+          title: 'Error',
+          text: this.modalMessage
+        };
       }
     }
+  }
+
+  closeModal() {
+    this.showModal = false;  // Close the modal
   }
 }

@@ -1,28 +1,27 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ModalComponent } from '../modal/modal.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
-import { isPlatformBrowser } from '@angular/common';
-
+import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-reset-password',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // Add ReactiveFormsModule here
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  styleUrls: ['./reset-password.component.css'],
+  standalone: true,
+  imports: [ModalComponent,CommonModule,ReactiveFormsModule ]
 })
 export class ResetPasswordComponent {
   resetPasswordForm: FormGroup;
+  showModal: boolean = false;  // To control modal visibility
+  modalMessage: string = '';  // The message to show in the modal
+  modalType: 'success' | 'error' | 'info' = 'info';  // The type of message
+  message: { type: string; title: string; text: string } | null = null; // To control alert visibility
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.resetPasswordForm = this.fb.group({
       newPassword: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
     });
   }
 
@@ -32,23 +31,46 @@ export class ResetPasswordComponent {
 
     if (this.resetPasswordForm.valid) {
       if (newPassword === confirmPassword) {
-        if (isPlatformBrowser(this.platformId)) {
-          const userData = localStorage.getItem('user');
-          if (userData) {
-            const parsedData = JSON.parse(userData);
-            parsedData.password = newPassword; // Set new password
-            localStorage.setItem('user', JSON.stringify(parsedData)); // Update storage
-            alert('Password reset successfully!');
-            this.router.navigate(['/login']); // Redirect to login page
-          } else {
-            alert('No user data found.');
-          }
-        }
+        // Reset the password logic
+        this.modalMessage = 'Password reset successfully!';
+        this.modalType = 'success';
+        this.showModal = true;
+
+        // Set the alert message for feedback
+        this.message = {
+          type: 'success',
+          title: 'Success',
+          text: this.modalMessage
+        };
       } else {
-        alert('Passwords do not match.');
+        // Passwords don't match
+        this.modalMessage = 'Passwords do not match.';
+        this.modalType = 'error';
+        this.showModal = true;
+
+        // Set the alert message for feedback
+        this.message = {
+          type: 'danger',
+          title: 'Error',
+          text: this.modalMessage
+        };
       }
     } else {
-      alert('Please fill in all required fields.');
+      // Form is invalid
+      this.modalMessage = 'Please fill in all required fields.';
+      this.modalType = 'error';
+      this.showModal = true;
+
+      // Set the alert message for feedback
+      this.message = {
+        type: 'danger',
+        title: 'Error',
+        text: this.modalMessage
+      };
     }
+  }
+
+  closeModal() {
+    this.showModal = false;  // Close the modal
   }
 }

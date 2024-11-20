@@ -13,10 +13,12 @@ import { EmployeeDashboardComponent } from './employee-dashboard/employee-dashbo
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AuthService } from './auth.service';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   imports: [
     BrowserModule,
+    ModalComponent,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
