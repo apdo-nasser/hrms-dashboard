@@ -22,25 +22,24 @@ body {
 
 /* Container Styling */
 .container {
-  position: relative;
-  z-index: 1;
-  width: 200%;
+  margin-top: 50px;
+  width: 100%;
   max-width: 450px;
   padding: 20px;
   border-radius: 20px;
   backdrop-filter: blur(1px); /* Strong frosted glass effect */
-  background-color: rgba(244, 239, 239, 0.2); /* Slightly more transparent white */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Depth shadow */
-  border: 1px solid rgba(92, 34, 239, 0.1); /* Glass-like border */
+  background-color: rgba(244, 239, 239, 0.3); /* Slightly more transparent white */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Depth shadow */
+  border: 1px solid rgba(92, 34, 239, 0.3); /* Glass-like border */
   animation: fadeIn 1s ease-out;
 }
 
 /* Card Styling */
 .card {
-  background: rgba(255, 255, 255, 0.1); /* Fully transparent card background to show background image */
+  background: rgba(255, 255, 255, 0.3); /* Fully transparent card background to show background image */
   border: none;
   border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -163,4 +162,10 @@ a:hover {
     opacity: 1;
     transform: translateY(0);
   }
+}
+h3 {
+  color: black;
+}
+.card-header h3 {
+  color: black;
 }

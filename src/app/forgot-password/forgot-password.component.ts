@@ -16,9 +16,10 @@ import { ModalComponent } from '../modal/modal.component';
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
-  showModal: boolean = false;  // To control modal visibility
-  modalMessage: string = '';  // The message to show in the modal
-  modalType: 'success' | 'error' | 'info' = 'info';  // The type of message
+  showModal: boolean = false; // To control modal visibility
+  modalMessage: string = ''; // The message to show in the modal
+  modalType: 'success' | 'error' | 'info' = 'info'; // The type of message
+  message: { type: string; title: string; text: string } | null = null; // To control alert visibility
 
   constructor(
     private fb: FormBuilder,
@@ -46,8 +47,16 @@ export class ForgotPasswordComponent {
           this.modalType = 'success';
           this.showModal = true;
 
+          // Set the alert message for feedback
+          this.message = {
+            type: 'success',
+            title: 'Email Sent',
+            text: this.modalMessage
+          };
+
           // Redirect to reset password page after a short delay
           setTimeout(() => {
+            this.showModal = false; // Close the modal
             this.router.navigate(['/reset-password']);
           }, 2000);
         } else {
@@ -55,12 +64,31 @@ export class ForgotPasswordComponent {
           this.modalMessage = 'No user found with this email.';
           this.modalType = 'error';
           this.showModal = true;
+
+          // Set the alert message for feedback
+          this.message = {
+            type: 'danger',
+            title: 'Error',
+            text: this.modalMessage
+          };
         }
       }
+    } else {
+      // Show error modal if form is invalid
+      this.modalMessage = 'Please enter a valid email address.';
+      this.modalType = 'error';
+      this.showModal = true;
+
+      // Set the alert message for feedback
+      this.message = {
+        type: 'danger',
+        title: 'Error',
+        text: this.modalMessage
+      };
     }
   }
 
   closeModal() {
-    this.showModal = false;  // Close the modal
+    this.showModal = false; // Close the modal
   }
 }
