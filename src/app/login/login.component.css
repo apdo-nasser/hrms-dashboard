@@ -24,14 +24,14 @@ body {
 .container {
   position: relative;
   z-index: 1;
-  width: 100%;
+  width: 200%;
   max-width: 450px;
   padding: 20px;
   border-radius: 20px;
-  backdrop-filter: blur(15px); /* Strong frosted glass effect */
-  background-color: rgba(255, 255, 255, 0.2); /* Slightly more transparent white */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37); /* Depth shadow */
-  border: 1px solid rgba(255, 255, 255, 0.18); /* Glass-like border */
+  backdrop-filter: blur(1px); /* Strong frosted glass effect */
+  background-color: rgba(244, 239, 239, 0.2); /* Slightly more transparent white */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Depth shadow */
+  border: 1px solid rgba(92, 34, 239, 0.1); /* Glass-like border */
   animation: fadeIn 1s ease-out;
 }
 
@@ -40,7 +40,7 @@ body {
   background: rgba(255, 255, 255, 0.1); /* Fully transparent card background to show background image */
   border: none;
   border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -55,7 +55,7 @@ body {
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
-  font-size: 1.7rem;
+  font-size: 1.1rem;
   font-weight: bold;
   border-radius: 12px 12px 0 0;
 }

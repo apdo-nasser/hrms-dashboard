@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone // Inject NgZone
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -49,7 +49,7 @@ export class NavbarComponent implements OnInit {
       if (userData && userData.name && userData.role) {
         this.userName = userData.name;
         this.userRole = userData.role;
-        this.isLoggedIn = true;  // Ensure this is correctly set
+        this.isLoggedIn = true; 
         this.setUserIconByRole(this.userRole);
         this.setLogoByRole(this.userRole);
       } else {
@@ -57,7 +57,6 @@ export class NavbarComponent implements OnInit {
       }
     }
   }
-  
 
   setUserIconByRole(role: string) {
     this.userIcon = `assets/${role}-icon.png` || 'assets/default-icon.png';
@@ -66,19 +65,6 @@ export class NavbarComponent implements OnInit {
   setLogoByRole(role: string) {
     this.logoUrl = `assets/${role}-logo.png` || 'assets/default-logo.png';
   }
-
-  onLogoClick() {
-    if (this.authService.isLoggedIn()) {
-      this.authService.redirectToDashboard();
-    } else {
-      this.router.navigate(['/login']);
-    }
-  }
-  
-  
-  
-  
-  
 
   logout() {
     if (isPlatformBrowser(this.platformId)) {
